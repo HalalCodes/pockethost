@@ -1,1026 +1,1047 @@
 <!DOCTYPE html>
-<html lang="bn" class="dark">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PocketHost Mobile Studio - GitHub Deployer & Host</title>
-    <!-- Tailwind CSS for modern mobile layout -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketHost Studio | GitHub Hosting Engine</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons for UI -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Ace Code Editor CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        appDark: '#0b0f17',
-                        appCard: '#151c2c',
-                        appInput: '#1c263b',
-                        accent: '#6366f1',
-                    },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
         ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b0f17;
+            background: #020617;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+            background: #1e293b;
+            border-radius: 9999px;
         }
-        #editor {
-            width: 100%;
-            height: 340px;
-            border-radius: 0.75rem;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-timer {
+            animation: pulse-ring 1s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="bg-appDark text-slate-100 font-sans min-h-screen flex flex-col justify-between select-none">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased pb-24 selection:bg-emerald-500 selection:text-slate-950 min-h-screen">
 
-    <!-- Top Header Bar -->
-    <header class="bg-appCard/90 border-b border-slate-800/80 sticky top-0 z-40 px-4 py-3 backdrop-blur-md">
-        <div class="max-w-md mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <i class="fa-solid fa-rocket text-white text-base"></i>
+    <!-- Top App Header -->
+    <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-server text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-base leading-tight bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">PocketHost Studio</h1>
-                    <p class="text-[10px] text-slate-400 font-medium" id="headerStatusText">GitHub API Direct Deployer</p>
+                    <h1 class="font-extrabold text-base tracking-tight bg-gradient-to-r from-white via-slate-200 to-emerald-400 bg-clip-text text-transparent">PocketHost Studio</h1>
+                    <p class="text-[10px] text-slate-400 font-medium">GitHub Pages API Engine</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <span id="headerBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                    <span id="badgeText">Config Required</span>
+                <span id="configBadge" class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                    <span>Not Connected</span>
                 </span>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 max-w-md w-full mx-auto p-4 mb-16">
+    <main class="max-w-4xl mx-auto px-4 pt-6">
 
-        <!-- TAB 1: HTML CODE DEPLOYER -->
-        <section id="tab-code" class="tab-content space-y-4">
-            
-            <!-- Folder Selector & File Name Form -->
-            <div class="bg-appCard border border-slate-800 rounded-2xl p-3.5 shadow-xl space-y-3">
-                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-folder"></i> Select Target Folder & File Name
-                    </span>
-                    <button onclick="switchTab('folders')" class="text-[10px] text-amber-400 hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> New Folder
-                    </button>
+        <!-- TAB 1: CODE DEPLOYER -->
+        <section id="tab-deploy" class="tab-content space-y-5">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Deploy HTML / Code File</h2>
+                        <p class="text-xs text-slate-400">সিলেক্ট করা ফোল্ডারে ফাইল বা প্রজেক্ট পোস্ট করুন</p>
+                    </div>
                 </div>
 
-                <div class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">১. ফোল্ডার নির্বাচন করুন (Select Folder)</label>
-                        <select id="codeFolderSelect" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-indigo-300 outline-none focus:border-indigo-500 transition">
-                            <option value="foldername">foldername</option>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Select Folder</label>
+                        <select id="deployFolderSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <option value="">-- Select Folder --</option>
                         </select>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">২. এক্সটেনশন সহ ফাইল নাম দিন (File Name with Ext)</label>
-                        <input type="text" id="fileNameInput" value="myportfolio.html" placeholder="e.g. myportfolio.html" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-slate-100 outline-none focus:border-indigo-500 transition">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">File Name (with extension)</label>
+                        <input type="text" id="deployFileName" placeholder="e.g. myportfolio or index.html" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
                     </div>
                 </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="text-xs font-medium text-slate-300">HTML / JS / Code Content</label>
+                        <label for="codeFileInput" class="text-[11px] text-emerald-400 hover:text-emerald-300 cursor-pointer flex items-center gap-1">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <span>Load from File</span>
+                        </label>
+                        <input type="file" id="codeFileInput" class="hidden" accept=".html,.css,.js,.json,.txt,.md">
+                    </div>
+                    <textarea id="deployCodeInput" rows="7" placeholder="Paste your HTML code here..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-emerald-300 focus:outline-none focus:border-emerald-500 placeholder:text-slate-700 resize-y"></textarea>
+                </div>
+
+                <button onclick="deployCode()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-95 text-slate-950 font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-[0.99] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rocket"></i>
+                    <span>Deploy & Get Live Link</span>
+                </button>
             </div>
 
-            <!-- Code Editor Box -->
-            <div class="bg-appCard border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
-                <div class="bg-slate-900/90 border-b border-slate-800 px-3 py-2 flex items-center justify-between gap-1">
-                    <div class="flex items-center gap-1.5">
-                        <i class="fa-brands fa-html5 text-orange-500 text-sm"></i>
-                        <span class="text-xs font-semibold text-slate-300">HTML Code Editor</span>
-                    </div>
-
-                    <div class="flex items-center gap-1.5">
-                        <label class="cursor-pointer px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition border border-slate-700/80 flex items-center gap-1">
-                            <i class="fa-solid fa-file-arrow-up text-emerald-400"></i>
-                            <span>Pick File</span>
-                            <input type="file" id="htmlFileInput" accept=".html,.css,.js,.txt,.json" class="hidden" onchange="handleCodeFileSelect(event)">
-                        </label>
-                        <button onclick="loadTemplateCode()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition border border-slate-700/80" title="Load Template">
-                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
-                        </button>
-                        <button onclick="clearEditor()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition border border-slate-700/80" title="Clear Code">
-                            <i class="fa-solid fa-trash-can text-rose-400"></i>
-                        </button>
-                    </div>
+            <!-- Result Link Card -->
+            <div id="deployResultCard" class="hidden glass-card p-5 rounded-3xl border border-emerald-500/40 bg-emerald-950/20 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Successfully Deployed!</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400">Live on GitHub Pages</span>
                 </div>
-
-                <!-- Ace Code Editor -->
-                <div id="editor"></div>
-
-                <!-- Deploy Button -->
-                <div class="p-3 bg-slate-900/90 border-t border-slate-800">
-                    <button id="deployBtn" onclick="deployProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/25 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                        <span>Deploy HTML to GitHub Pages</span>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-2 overflow-hidden">
+                    <input type="text" id="deployLiveUrl" readonly class="bg-transparent text-xs font-mono text-emerald-300 w-full focus:outline-none select-all">
+                    <button onclick="copyToClipboard('deployLiveUrl')" class="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 text-xs font-medium rounded-lg transition shrink-0 flex items-center gap-1">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copy</span>
                     </button>
                 </div>
-            </div>
-
-            <!-- HTML Deployment Result Modal Card -->
-            <div id="codeResultCard" class="hidden bg-slate-900 rounded-2xl p-4 border border-emerald-500/40 space-y-3 shadow-xl">
-                <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold">
-                    <i class="fa-solid fa-circle-check text-sm"></i>
-                    <span>HTML File Successfully Deployed!</span>
-                </div>
-                <div>
-                    <label class="block text-[10px] text-slate-400 mb-1">Your Hosted Page Live URL:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="resultCodeUrl" readonly class="flex-1 bg-appInput border border-slate-700 rounded-xl px-2.5 py-2 text-xs font-mono text-emerald-300 outline-none">
-                        <button onclick="copyFieldValue('resultCodeUrl')" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-1">
-                            <i class="fa-solid fa-copy"></i> Copy
-                        </button>
-                    </div>
-                </div>
-                <a id="resultCodeLinkBtn" href="#" target="_blank" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold rounded-xl transition flex items-center justify-center gap-1.5 border border-slate-700">
-                    <i class="fa-solid fa-up-right-from-square text-xs"></i> Open Page in Browser
+                <a id="deployViewBtn" href="#" target="_blank" class="block w-full text-center py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 rounded-xl transition">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] mr-1"></i> Open Live Page
                 </a>
             </div>
         </section>
 
-        <!-- TAB 2: IMAGE & MEDIA HOSTING -->
-        <section id="tab-image" class="tab-content hidden space-y-4">
-            
-            <div class="bg-appCard border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-image text-pink-400 text-base"></i>
-                        <h2 class="font-bold text-sm text-slate-200">Mobile Image & Media Hosting</h2>
+        <!-- TAB 2: IMAGE HOST -->
+        <section id="tab-image" class="tab-content hidden space-y-5">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-teal-500/10 rounded-xl text-teal-400 border border-teal-500/20">
+                        <i class="fa-solid fa-image text-lg"></i>
                     </div>
-                    <span class="text-[10px] bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded-full font-semibold">Direct CDN</span>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Host Image / Picture</h2>
+                        <p class="text-xs text-slate-400">মেমোরি থেকে ছবি নির্বাচন করে ডিরেক্ট লিংক পান</p>
+                    </div>
                 </div>
 
-                <!-- Folder & File Name Config -->
-                <div class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">১. ফোল্ডার নির্বাচন করুন (Select Folder)</label>
-                        <select id="imageFolderSelect" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-pink-300 outline-none focus:border-pink-500 transition">
-                            <option value="pictureone">pictureone</option>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Select Folder</label>
+                        <select id="imageFolderSelect" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <option value="">-- Select Folder --</option>
                         </select>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">২. ইমেজের ফাইল নাম দিন (Image File Name with Ext)</label>
-                        <input type="text" id="imageFileName" value="myphoto.jpg" placeholder="e.g. myphoto.jpg" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-slate-100 outline-none focus:border-pink-500 transition">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Image File Name (with extension)</label>
+                        <input type="text" id="imageFileName" placeholder="e.g. myphoto.jpg" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
                     </div>
                 </div>
 
-                <!-- Mobile File Pick Area -->
-                <div onclick="document.getElementById('galleryFileInput').click()" class="border-2 border-dashed border-slate-700/80 hover:border-pink-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-900/50 hover:bg-slate-900 transition flex flex-col items-center justify-center gap-2 group">
-                    <input type="file" id="galleryFileInput" accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.pdf" class="hidden" onchange="previewSelectedImage(event)">
-                    <div class="w-12 h-12 rounded-full bg-pink-500/10 group-hover:bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl transition">
-                        <i class="fa-solid fa-photo-film"></i>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Choose Image from Device</label>
+                    <div onclick="document.getElementById('imagePickerInput').click()" class="w-full py-8 border-2 border-dashed border-slate-800 hover:border-emerald-500/50 rounded-2xl bg-slate-900/50 flex flex-col items-center justify-center cursor-pointer transition group">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 group-hover:text-emerald-400 transition mb-2"></i>
+                        <span id="selectedImageName" class="text-xs font-medium text-slate-400 group-hover:text-slate-200">Click to browse photo from mobile / PC</span>
+                        <span class="text-[10px] text-slate-600 mt-1">Supports JPG, PNG, WEBP, GIF, SVG</span>
                     </div>
-                    <div>
-                        <p class="text-xs font-semibold text-slate-200">Tap to Select Image from Mobile</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Supports JPG, PNG, WEBP, GIF, SVG</p>
-                    </div>
+                    <input type="file" id="imagePickerInput" class="hidden" accept="image/*" onchange="handleImageSelection(event)">
                 </div>
 
-                <!-- Image Preview Card -->
-                <div id="imagePreviewCard" class="hidden bg-slate-900 rounded-xl p-3 border border-slate-800 space-y-3">
-                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-                        <span>Selected Image Preview</span>
-                        <span id="imageSizeBadge" class="text-[10px] font-mono text-slate-400">0 KB</span>
-                    </div>
-                    <div class="flex items-center justify-center p-2 bg-slate-950 rounded-lg overflow-hidden max-h-48">
-                        <img id="previewImgElement" src="" alt="Preview" class="max-h-44 object-contain rounded">
-                    </div>
-                    <button id="uploadImageBtn" onclick="uploadImageToGitHub()" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-95 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-pink-600/20 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-                        <span>Upload & Host Image</span>
-                    </button>
+                <!-- Preview Box -->
+                <div id="imagePreviewContainer" class="hidden text-center p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                    <img id="imagePreview" src="" alt="Preview" class="max-h-40 mx-auto rounded-xl object-contain border border-slate-700">
                 </div>
 
-                <!-- Image Result Links Card -->
-                <div id="imageResultCard" class="hidden bg-slate-900 rounded-2xl p-4 border border-pink-500/40 space-y-3 shadow-xl">
-                    <div class="flex items-center gap-2 text-pink-400 text-xs font-bold">
-                        <i class="fa-solid fa-circle-check text-sm"></i>
-                        <span>Image Hosted Successfully!</span>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">Direct Image URL:</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="resultDirectUrl" readonly class="flex-1 bg-appInput border border-slate-700 rounded-xl px-2.5 py-2 text-xs font-mono text-pink-300 outline-none">
-                            <button onclick="copyFieldValue('resultDirectUrl')" class="px-3 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold transition flex items-center gap-1">
-                                <i class="fa-solid fa-copy"></i> Copy
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 mb-1">HTML Image Tag Snippet:</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="resultHtmlTag" readonly class="flex-1 bg-appInput border border-slate-700 rounded-xl px-2.5 py-2 text-xs font-mono text-slate-300 outline-none">
-                            <button onclick="copyFieldValue('resultHtmlTag')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center gap-1">
-                                <i class="fa-solid fa-code"></i> Copy
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+                <button onclick="uploadImage()" class="w-full py-3 bg-gradient-to-r from-teal-500 to-cyan-500 hover:opacity-95 text-slate-950 font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-teal-500/20 transition active:scale-[0.99] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>Upload Image & Get Direct Link</span>
+                </button>
             </div>
-        </section>
 
-        <!-- TAB 3: DEDICATED FOLDER MANAGER -->
-        <section id="tab-folders" class="tab-content hidden space-y-4">
-            <div class="bg-appCard border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-folder-plus text-amber-400 text-base"></i>
-                        <h2 class="font-bold text-sm text-slate-200">Folder Directory Manager</h2>
-                    </div>
-                    <button onclick="fetchRepoFolders()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-medium transition border border-slate-700 flex items-center gap-1">
-                        <i class="fa-solid fa-rotate text-xs"></i> Sync GitHub
-                    </button>
+            <!-- Image Upload Result -->
+            <div id="imageResultCard" class="hidden glass-card p-5 rounded-3xl border border-teal-500/40 bg-teal-950/20 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-teal-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Image Uploaded Successfully!</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400">Direct CDN Link</span>
                 </div>
-
-                <p class="text-xs text-slate-400 leading-relaxed">
-                    এখানে নতুন ফোল্ডার নাম তৈরি করুন (যেমন: <code class="text-amber-400 font-mono">foldername</code> বা <code class="text-amber-400 font-mono">pictureone</code>)। ফাইল হোস্ট করার সময় ড্রপডাউন থেকে তৈরি ফোল্ডার সহজে সিলেক্ট করতে পারবেন।
-                </p>
-
-                <!-- Create Empty Folder Form -->
-                <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
-                    <label class="block text-xs font-semibold text-slate-300">Create New Folder Name</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="newFolderPathInput" placeholder="e.g. foldername or pictureone" class="flex-1 bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs font-mono text-slate-100 outline-none focus:border-amber-500 transition">
-                        <button onclick="createNewFolder()" id="createFolderBtn" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider transition shrink-0 flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
-                            <i class="fa-solid fa-plus text-xs"></i> Create
+                
+                <div class="space-y-2">
+                    <label class="text-[11px] text-slate-400 font-medium">Direct Image URL:</label>
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+                        <input type="text" id="imageLiveUrl" readonly class="bg-transparent text-xs font-mono text-teal-300 w-full focus:outline-none select-all">
+                        <button onclick="copyToClipboard('imageLiveUrl')" class="px-3 py-1.5 bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 text-xs font-medium rounded-lg transition shrink-0 flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copy</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Existing Folder List -->
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold px-1">
-                        <span>Created & Synced Folders</span>
-                        <span id="folderCountBadge" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full font-mono text-indigo-400">0 Folders</span>
-                    </div>
-
-                    <div id="folderListContainer" class="space-y-2 max-h-[320px] overflow-y-auto pr-1">
-                        <!-- Dynamic Folder Items -->
-                    </div>
-                </div>
+                <a id="imageViewBtn" href="#" target="_blank" class="block w-full text-center py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-300 rounded-xl transition">
+                    <i class="fa-solid fa-eye text-[10px] mr-1"></i> View Full Image
+                </a>
             </div>
         </section>
 
-        <!-- TAB 4: DEPLOYED FILE EXPLORER -->
-        <section id="tab-explorer" class="tab-content hidden space-y-4">
-            <div class="bg-appCard border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col space-y-3">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-folder-tree text-indigo-400 text-base"></i>
-                        <h2 class="font-bold text-sm text-slate-200">Repository Files Explorer</h2>
+        <!-- TAB 3: FOLDER MANAGER -->
+        <section id="tab-folders" class="tab-content hidden space-y-5">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-cyan-500/10 rounded-xl text-cyan-400 border border-cyan-500/20">
+                        <i class="fa-solid fa-folder-plus text-lg"></i>
                     </div>
-                    <button onclick="fetchDeployedProjects()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition border border-slate-700 flex items-center gap-1">
-                        <i class="fa-solid fa-rotate text-xs"></i> Refresh
+                    <div>
+                        <h2 class="text-base font-bold text-white">Create New Folder</h2>
+                        <p class="text-xs text-slate-400">নতুন ফোল্ডার তৈরি করুন যা ড্রপডাউন সিলেক্টরে যোগ হবে</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <input type="text" id="newFolderNameInput" placeholder="Enter Folder Name (e.g. picture or myportfolio)" class="flex-1 px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
+                    <button onclick="createNewFolder()" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition active:scale-[0.99] flex items-center justify-center gap-2 shrink-0">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Create Folder</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Existing Folders List -->
+            <div class="glass-card p-5 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-folder-tree text-cyan-400"></i>
+                        <span>Available Folders List</span>
+                    </h3>
+                    <button onclick="syncFoldersFromGithub()" class="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span>Sync GitHub</span>
                     </button>
                 </div>
 
-                <div>
-                    <input type="text" id="searchProjectInput" onkeyup="filterProjects()" placeholder="Search hosted files or folders..." class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-indigo-500 transition">
-                </div>
-
-                <div id="projectsListContainer" class="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
-                    <div class="text-center py-10 text-slate-500 text-xs">
-                        <i class="fa-solid fa-box-open text-3xl mb-2 block opacity-40"></i>
-                        Click Refresh to load files from GitHub.
-                    </div>
+                <div id="folderListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Folders inserted dynamically -->
                 </div>
             </div>
         </section>
 
-        <!-- TAB 5: SETTINGS & LOCAL STORAGE CONFIG -->
-        <section id="tab-settings" class="tab-content hidden space-y-4">
-            <div class="bg-appCard border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-                <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
-                    <i class="fa-solid fa-sliders text-indigo-400 text-base"></i>
-                    <h2 class="font-bold text-sm text-slate-200">GitHub API Configuration</h2>
-                </div>
-
-                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400 leading-relaxed flex gap-2">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 text-sm shrink-0 mt-0.5"></i>
-                    <span>আপনার Token ব্রাউজারের <code class="text-indigo-400 font-mono">localStorage</code> এ সেভ থাকে। অন্য কোনো সার্ভারে শেয়ার হয় না।</span>
-                </div>
-
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">GitHub Username</label>
-                        <input type="text" id="githubUser" placeholder="e.g. halalcodes" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-slate-100 outline-none focus:border-indigo-500 transition font-mono">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Repository Name (Pages Enabled)</label>
-                        <input type="text" id="githubRepo" placeholder="e.g. pockethost" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-slate-100 outline-none focus:border-indigo-500 transition font-mono">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Personal Access Token (Classic Token)</label>
-                        <div class="relative">
-                            <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full bg-appInput border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-slate-100 outline-none focus:border-indigo-500 transition pr-10 font-mono">
-                            <button type="button" onclick="toggleTokenVisibility()" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300">
-                                <i id="tokenEyeIcon" class="fa-solid fa-eye text-xs"></i>
-                            </button>
+        <!-- TAB 4: EXPLORER (Sub-Page Navigation View) -->
+        <section id="tab-explorer" class="tab-content hidden space-y-5">
+            
+            <!-- EXPLORER PAGE 1: FOLDERS LIST VIEW -->
+            <div id="explorerPageFolders" class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-purple-500/10 rounded-xl text-purple-400 border border-purple-500/20">
+                            <i class="fa-solid fa-folder-open text-lg"></i>
                         </div>
-                        <p class="text-[10px] text-slate-500 mt-1">Token Scope Required: <span class="text-amber-400 font-mono">repo</span> tick enabled.</p>
+                        <div>
+                            <h2 class="text-base font-bold text-white">Repository Folders</h2>
+                            <p class="text-xs text-slate-400">ফোল্ডারে ক্লিক করে ভেতরের ছবি ও ফাইলসমূহ দেখুন</p>
+                        </div>
                     </div>
-
-                    <button onclick="saveSettings()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 transition">
-                        Save API Configuration
+                    <button onclick="fetchRepositoryTree()" class="p-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-emerald-400 transition" title="Refresh Tree">
+                        <i class="fa-solid fa-rotate"></i>
                     </button>
                 </div>
+
+                <!-- Folders Grid -->
+                <div id="explorerFoldersContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <div class="col-span-full text-center py-10 text-slate-500 text-xs">
+                        <i class="fa-solid fa-spinner animate-spin text-lg mb-2 block"></i>
+                        Loading Repository Folders...
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPLORER PAGE 2: SINGLE FOLDER FILES VIEW (NEW PAGE VIEW) -->
+            <div id="explorerPageSingleFolder" class="hidden glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <button onclick="backToExplorerFolders()" class="p-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-emerald-400 transition flex items-center gap-1.5 text-xs font-semibold">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Back</span>
+                        </button>
+                        <div>
+                            <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Folder View</span>
+                            <h3 id="currentFolderNameHeading" class="text-base font-extrabold text-cyan-400 flex items-center gap-2">
+                                <i class="fa-solid fa-folder"></i>
+                                <span>folder_name</span>
+                            </h3>
+                        </div>
+                    </div>
+                    <span id="currentFolderFileCount" class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-300">
+                        0 items
+                    </span>
+                </div>
+
+                <!-- Files List Container -->
+                <div id="singleFolderFilesContainer" class="space-y-3 pt-2">
+                    <!-- Files will be dynamically rendered here -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 5: SETTINGS -->
+        <section id="tab-settings" class="tab-content hidden space-y-5">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4 border border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-sliders text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white">GitHub API Settings</h2>
+                        <p class="text-xs text-slate-400">আপনার Classic Token ও Repository ব্রাউজারে সেভ থাকবে</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3.5 pt-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">GitHub Username</label>
+                        <input type="text" id="settingUsername" placeholder="e.g. halalcodes" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Repository Name (GitHub Pages Enabled)</label>
+                        <input type="text" id="settingRepo" placeholder="e.g. pockethost" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Personal Access Token (Classic)</label>
+                        <input type="password" id="settingToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder:text-slate-600">
+                        <p class="text-[10px] text-slate-500 mt-1">Requires <code class="text-emerald-400">repo</code> scope permissions.</p>
+                    </div>
+                </div>
+
+                <button onclick="saveSettings()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition active:scale-[0.99] flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Save API Credentials</span>
+                </button>
             </div>
         </section>
 
     </main>
 
-    <!-- Mobile Bottom App Bar Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-appCard/95 border-t border-slate-800 backdrop-blur-md z-40 px-1 py-2">
-        <div class="max-w-md mx-auto grid grid-cols-5 gap-0.5 text-center">
-            <button onclick="switchTab('code')" id="nav-code" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-indigo-400 font-semibold transition">
-                <i class="fa-solid fa-code text-sm"></i>
-                <span class="text-[9px] mt-1">Deploy</span>
+    <!-- Bottom Navigation App Bar (Mobile First UI) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 glass-nav px-2 py-2">
+        <div class="max-w-md mx-auto grid grid-cols-5 gap-1">
+            <button onclick="switchTab('deploy')" id="nav-deploy" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-emerald-400 transition">
+                <i class="fa-solid fa-code text-base"></i>
+                <span class="text-[10px] font-medium mt-1">Deploy</span>
             </button>
-            <button onclick="switchTab('image')" id="nav-image" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-200 font-semibold transition">
-                <i class="fa-solid fa-image text-sm"></i>
-                <span class="text-[9px] mt-1">Image</span>
+            <button onclick="switchTab('image')" id="nav-image" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-image text-base"></i>
+                <span class="text-[10px] font-medium mt-1">Image</span>
             </button>
-            <button onclick="switchTab('folders')" id="nav-folders" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-200 font-semibold transition">
-                <i class="fa-solid fa-folder-plus text-sm"></i>
-                <span class="text-[9px] mt-1">Folders</span>
+            <button onclick="switchTab('folders')" id="nav-folders" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-folder-plus text-base"></i>
+                <span class="text-[10px] font-medium mt-1">Folders</span>
             </button>
-            <button onclick="switchTab('explorer')" id="nav-explorer" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-200 font-semibold transition">
-                <i class="fa-solid fa-folder-tree text-sm"></i>
-                <span class="text-[9px] mt-1">Explorer</span>
+            <button onclick="switchTab('explorer')" id="nav-explorer" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-folder-tree text-base"></i>
+                <span class="text-[10px] font-medium mt-1">Explorer</span>
             </button>
-            <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 hover:text-slate-200 font-semibold transition">
-                <i class="fa-solid fa-gear text-sm"></i>
-                <span class="text-[9px] mt-1">Settings</span>
+            <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-gear text-base"></i>
+                <span class="text-[10px] font-medium mt-1">Settings</span>
             </button>
         </div>
     </nav>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed top-16 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- Toast Notification Message -->
+    <div id="toastMessage" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-2xl bg-slate-900 border border-emerald-500/40 text-xs font-semibold text-emerald-300 shadow-2xl flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-emerald-400"></i>
+        <span id="toastText">Action successful</span>
+    </div>
+
+    <!-- 5-SECOND COUNTDOWN DELETE MODAL OVERLAY -->
+    <div id="deleteCountdownModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full p-6 rounded-3xl border border-red-500/40 text-center space-y-4 shadow-2xl">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 flex items-center justify-center mx-auto text-2xl font-black pulse-timer">
+                <span id="deleteTimerSeconds">5</span>
+            </div>
+            
+            <div>
+                <h3 class="text-sm font-bold text-white">Confirming Deletion</h3>
+                <p id="deleteModalItemName" class="text-xs text-slate-400 font-mono mt-1 truncate">file_or_folder_name</p>
+                <p class="text-[11px] text-red-400 mt-2 font-medium">৫ সেকেন্ড পর স্থায়ীভাবে ডিলিট হয়ে যাবে!</p>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="cancelScheduledDeletion()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition border border-slate-700">
+                    <i class="fa-solid fa-xmark mr-1"></i> Undo / Cancel
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        let editor;
-        const LOCAL_STORAGE_KEY = 'pockethost_gh_config';
-        const FOLDERS_STORAGE_KEY = 'pockethost_saved_folders';
-        let selectedImageBase64 = null;
-        let createdFoldersList = ['foldername', 'pictureone'];
-
-        window.onload = function() {
-            // Ace Editor Setup
-            editor = ace.edit("editor");
-            editor.setTheme("ace/theme/one_dark");
-            editor.session.setMode("ace/mode/html");
-            editor.setFontSize(13);
-            editor.setShowPrintMargin(false);
-
-            loadTemplateCode();
-            loadSavedFolders();
-            loadSettings();
-
-            const config = getConfig();
-            if (config.user && config.repo && config.token) {
-                fetchRepoFolders();
-            }
+        // Global State variables
+        let config = {
+            username: '',
+            repo: '',
+            token: ''
         };
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            
+        let foldersList = ['picture', 'myportfolio'];
+        let selectedBase64Image = '';
+
+        // Explorer tree structured data
+        let globalFolderMap = {};
+        let activeExplorerFolder = null;
+
+        // Scheduled Deletion Timer variables
+        let activeDeleteTimeout = null;
+        let activeDeleteInterval = null;
+        let currentCountdownSeconds = 5;
+
+        window.onload = function() {
+            loadSavedConfig();
+            loadSavedFolders();
+            populateFolderDropdowns();
+            renderFolderList();
+
+            // Code file input loader handler
+            document.getElementById('codeFileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                document.getElementById('deployFileName').value = file.name;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('deployCodeInput').value = evt.target.result;
+                };
+                reader.readAsText(file);
+            });
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-indigo-400');
+                btn.classList.remove('text-emerald-400');
                 btn.classList.add('text-slate-400');
             });
 
-            const selectedTab = document.getElementById(`tab-${tabName}`);
-            if (selectedTab) {
-                selectedTab.classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.classList.add('text-emerald-400');
+
+            if (tabId === 'explorer') {
+                backToExplorerFolders();
+                fetchRepositoryTree();
+            }
+        }
+
+        function loadSavedConfig() {
+            const saved = localStorage.getItem('pockethost_config');
+            if (saved) {
+                config = JSON.parse(saved);
+                document.getElementById('settingUsername').value = config.username || '';
+                document.getElementById('settingRepo').value = config.repo || '';
+                document.getElementById('settingToken').value = config.token || '';
+
+                if (config.username && config.repo && config.token) {
+                    updateConfigBadge(true);
+                }
+            }
+        }
+
+        function saveSettings() {
+            config.username = document.getElementById('settingUsername').value.trim();
+            config.repo = document.getElementById('settingRepo').value.trim();
+            config.token = document.getElementById('settingToken').value.trim();
+
+            if (!config.username || !config.repo || !config.token) {
+                showToast("⚠️ All credentials are required!");
+                return;
             }
 
-            const activeBtn = document.getElementById(`nav-${tabName}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400');
-                activeBtn.classList.add('text-indigo-400');
-            }
+            localStorage.setItem('pockethost_config', JSON.stringify(config));
+            updateConfigBadge(true);
+            showToast("✅ Settings saved successfully!");
+            switchTab('deploy');
+        }
 
-            if (tabName === 'explorer') {
-                fetchDeployedProjects();
-            } else if (tabName === 'folders') {
-                renderFolderList();
+        function updateConfigBadge(isConnected) {
+            const badge = document.getElementById('configBadge');
+            if (isConnected) {
+                badge.className = "px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Connected</span>`;
             }
         }
 
         function loadSavedFolders() {
-            const raw = localStorage.getItem(FOLDERS_STORAGE_KEY);
-            if (raw) {
-                try {
-                    const parsed = JSON.parse(raw);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        createdFoldersList = Array.from(new Set([...createdFoldersList, ...parsed]));
-                    }
-                } catch(e){}
+            const saved = localStorage.getItem('pockethost_folders');
+            if (saved) {
+                foldersList = JSON.parse(saved);
             }
-            syncFolderSelectors();
         }
 
-        function saveFoldersToLocal() {
-            localStorage.setItem(FOLDERS_STORAGE_KEY, JSON.stringify(createdFoldersList));
-            syncFolderSelectors();
+        function saveFolders() {
+            localStorage.setItem('pockethost_folders', JSON.stringify(foldersList));
+            populateFolderDropdowns();
             renderFolderList();
         }
 
-        function syncFolderSelectors() {
-            const codeSelect = document.getElementById('codeFolderSelect');
+        function populateFolderDropdowns() {
+            const deploySelect = document.getElementById('deployFolderSelect');
             const imageSelect = document.getElementById('imageFolderSelect');
 
-            let options = '';
-            createdFoldersList.forEach(folder => {
-                options += `<option value="${folder}">${folder}</option>`;
+            let optionsHtml = `<option value="">-- Select Folder --</option>`;
+            foldersList.forEach(folder => {
+                optionsHtml += `<option value="${folder}">${folder}</option>`;
             });
 
-            if (codeSelect) codeSelect.innerHTML = options;
-            if (imageSelect) imageSelect.innerHTML = options;
-        }
-
-        async function createNewFolder() {
-            const config = getConfig();
-            if (!config.user || !config.repo || !config.token) {
-                showToast('Please configure GitHub Settings first!', 'error');
-                switchTab('settings');
-                return;
-            }
-
-            let folderPath = document.getElementById('newFolderPathInput').value.trim();
-            if (!folderPath) {
-                showToast('Please enter a folder name!', 'error');
-                return;
-            }
-
-            folderPath = folderPath.replace(/^\/+|\/+$/g, '');
-            const keepFilePath = `${folderPath}/.gitkeep`;
-
-            const btn = document.getElementById('createFolderBtn');
-            const origText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i>`;
-
-            try {
-                const checkUrl = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${keepFilePath}`;
-                const base64Empty = btoa("# PocketHost Directory Keep File\n");
-
-                const res = await fetch(checkUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${config.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: `Create folder: ${folderPath}`,
-                        content: base64Empty
-                    })
-                });
-
-                if (res.ok || res.status === 422) {
-                    if (!createdFoldersList.includes(folderPath)) {
-                        createdFoldersList.push(folderPath);
-                        saveFoldersToLocal();
-                    }
-                    showToast(`Folder "${folderPath}" created!`, 'success');
-                    document.getElementById('newFolderPathInput').value = '';
-                } else {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Failed to create folder');
-                }
-            } catch (err) {
-                showToast(`Error: ${err.message}`, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = origText;
-            }
+            deploySelect.innerHTML = optionsHtml;
+            imageSelect.innerHTML = optionsHtml;
         }
 
         function renderFolderList() {
             const container = document.getElementById('folderListContainer');
-            const countBadge = document.getElementById('folderCountBadge');
-
-            if (countBadge) countBadge.textContent = `${createdFoldersList.length} Folders`;
-
-            if (createdFoldersList.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-slate-500 text-xs">
-                        <i class="fa-solid fa-folder-open text-3xl mb-2 block opacity-40"></i>
-                        No custom folders created yet.
-                    </div>`;
+            if (foldersList.length === 0) {
+                container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-500 py-4">No folders created yet</div>`;
                 return;
             }
 
-            let html = '';
-            createdFoldersList.forEach((folder, idx) => {
-                html += `
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <i class="fa-solid fa-folder text-amber-400 text-sm shrink-0"></i>
-                        <span class="font-mono text-xs font-semibold text-slate-200 truncate">${folder}</span>
+            container.innerHTML = foldersList.map(folder => `
+                <div class="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <i class="fa-solid fa-folder text-cyan-400 text-sm"></i>
+                        <span class="text-xs font-semibold text-slate-200 truncate">${folder}</span>
                     </div>
-
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <button onclick="selectFolderForUse('${folder}', 'code')" class="px-2 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold transition">
-                            Use Deploy
-                        </button>
-                        <button onclick="selectFolderForUse('${folder}', 'image')" class="px-2 py-1 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 text-[10px] font-semibold transition">
-                            Use Image
-                        </button>
-                        <button onclick="removeFolderFromList(${idx})" class="p-1 text-slate-500 hover:text-rose-400 text-xs transition">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
+                    <button onclick="requestDeleteFolder('${folder}')" class="text-slate-500 hover:text-red-400 p-1.5 text-xs transition" title="Delete Folder">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
-        function selectFolderForUse(folder, tab) {
-            if (tab === 'code') {
-                document.getElementById('codeFolderSelect').value = folder;
-                switchTab('code');
-                showToast(`Selected "${folder}" for HTML deployment`, 'info');
-            } else if (tab === 'image') {
-                document.getElementById('imageFolderSelect').value = folder;
-                switchTab('image');
-                showToast(`Selected "${folder}" for Image hosting`, 'info');
-            }
-        }
-
-        function removeFolderFromList(index) {
-            createdFoldersList.splice(index, 1);
-            saveFoldersToLocal();
-            showToast('Folder removed from list', 'info');
-        }
-
-        async function fetchRepoFolders() {
-            const config = getConfig();
-            if (!config.user || !config.repo || !config.token) return;
-
-            try {
-                const res = await fetch(`https://api.github.com/repos/${config.user}/${config.repo}/git/trees/main?recursive=1`, {
-                    headers: { 'Authorization': `token ${config.token}` }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.tree) {
-                        const dirs = data.tree
-                            .filter(item => item.type === 'tree')
-                            .map(item => item.path);
-
-                        if (dirs.length > 0) {
-                            createdFoldersList = Array.from(new Set([...createdFoldersList, ...dirs]));
-                            saveFoldersToLocal();
-                            showToast(`Synced ${dirs.length} folders from GitHub!`, 'success');
-                        }
-                    }
-                }
-            } catch(e) {
-                console.log('Folder fetch error:', e);
-            }
-        }
-
-        function getConfig() {
-            const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (!raw) return { user: 'halalcodes', repo: 'pockethost', token: '' };
-            try { 
-                const p = JSON.parse(raw);
-                return {
-                    user: p.user || 'halalcodes',
-                    repo: p.repo || 'pockethost',
-                    token: p.token || ''
-                };
-            } catch (e) { return { user: 'halalcodes', repo: 'pockethost', token: '' }; }
-        }
-
-        async function deployProject() {
-            const config = getConfig();
-            if (!config.user || !config.repo || !config.token) {
-                showToast('Please configure GitHub API Settings first!', 'error');
-                switchTab('settings');
-                return;
-            }
-
-            const folderName = document.getElementById('codeFolderSelect').value.trim();
-            let fileName = document.getElementById('fileNameInput').value.trim() || 'myportfolio.html';
-            const codeContent = editor.getValue();
+        async function createNewFolder() {
+            const nameInput = document.getElementById('newFolderNameInput');
+            let folderName = nameInput.value.trim().replace(/^\/+|\/+$/g, '');
 
             if (!folderName) {
-                showToast('Please select a target folder!', 'error');
+                showToast("⚠️ Enter a valid folder name!");
                 return;
             }
 
-            if (!fileName) {
-                showToast('Please enter a file name with extension!', 'error');
-                return;
-            }
+            if (!foldersList.includes(folderName)) {
+                foldersList.push(folderName);
+                saveFolders();
+                nameInput.value = '';
 
-            if (!codeContent.trim()) {
-                showToast('Code content cannot be empty!', 'error');
-                return;
-            }
-
-            const fullFilePath = `${folderName}/${fileName}`;
-            const deployBtn = document.getElementById('deployBtn');
-            const origContent = deployBtn.innerHTML;
-            deployBtn.disabled = true;
-            deployBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-sm"></i> <span>Deploying to GitHub...</span>`;
-
-            try {
-                let existingSha = null;
-                const checkUrl = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${fullFilePath}`;
-                const checkRes = await fetch(checkUrl, {
-                    headers: { 'Authorization': `token ${config.token}` }
-                });
-
-                if (checkRes.ok) {
-                    const fileData = await checkRes.json();
-                    existingSha = fileData.sha;
+                // If configured, create a empty .gitkeep file on GitHub so folder exists in git
+                if (config.token && config.username && config.repo) {
+                    try {
+                        const dummyPath = `${folderName}/.gitkeep`;
+                        const dummyContent = btoa('# folder keep');
+                        await uploadFileToGitHub(dummyPath, dummyContent, `Create folder ${folderName}`);
+                    } catch (e) {
+                        console.warn("Could not sync empty folder to GitHub immediately", e);
+                    }
                 }
 
-                const utf8Bytes = new TextEncoder().encode(codeContent);
-                let binaryStr = '';
-                for (let i = 0; i < utf8Bytes.length; i++) binaryStr += String.fromCharCode(utf8Bytes[i]);
-                const base64Content = btoa(binaryStr);
-
-                const bodyPayload = {
-                    message: `Deploy HTML: ${fullFilePath}`,
-                    content: base64Content
-                };
-                if (existingSha) bodyPayload.sha = existingSha;
-
-                const putRes = await fetch(checkUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${config.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(bodyPayload)
-                });
-
-                if (putRes.ok) {
-                    // Result URL Format: halalcodes.github.io/pockethost/foldername/myportfolio.html
-                    const liveUrl = `https://${config.user}.github.io/${config.repo}/${fullFilePath}`;
-
-                    document.getElementById('resultCodeUrl').value = liveUrl;
-                    document.getElementById('resultCodeLinkBtn').href = liveUrl;
-                    document.getElementById('codeResultCard').classList.remove('hidden');
-
-                    showToast('Deploy successful! Page live in ~20s.', 'success');
-                    copyToClipboard(liveUrl, 'Live Page URL copied!');
-                } else {
-                    const errData = await putRes.json();
-                    throw new Error(errData.message || 'Deploy failed');
-                }
-
-            } catch (err) {
-                showToast(`Error: ${err.message}`, 'error');
-            } finally {
-                deployBtn.disabled = false;
-                deployBtn.innerHTML = origContent;
+                showToast(`📁 Folder "${folderName}" created!`);
+            } else {
+                showToast("⚠️ Folder already exists!");
             }
         }
 
-        function previewSelectedImage(event) {
-            const file = event.target.files[0];
+        async function deployCode() {
+            if (!verifyConfig()) return;
+
+            const folder = document.getElementById('deployFolderSelect').value;
+            let fileName = document.getElementById('deployFileName').value.trim();
+            const content = document.getElementById('deployCodeInput').value;
+
+            if (!folder) {
+                showToast("⚠️ Please select a folder!");
+                return;
+            }
+            if (!fileName) {
+                showToast("⚠️ Please enter a file name!");
+                return;
+            }
+            if (!content) {
+                showToast("⚠️ Please enter code content!");
+                return;
+            }
+
+            fileName = fileName.replace(/^\/+/, '');
+            const fullPath = `${folder}/${fileName}`;
+            const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+            showToast("🚀 Deploying to GitHub...");
+
+            try {
+                // Auto-delete .gitkeep if present in folder
+                await autoRemoveGitKeep(folder);
+
+                const liveUrl = await uploadFileToGitHub(fullPath, encodedContent, `Deploy code: ${fullPath}`);
+                
+                // Final URL Structure: https://username.github.io/repo/folder/file
+                document.getElementById('deployLiveUrl').value = liveUrl;
+                document.getElementById('deployViewBtn').href = liveUrl;
+                document.getElementById('deployResultCard').classList.remove('hidden');
+                showToast("✅ Deployed successfully!");
+            } catch (err) {
+                console.error(err);
+                showToast("❌ Upload Failed: " + err.message);
+            }
+        }
+
+        function handleImageSelection(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
-            document.getElementById('imageFileName').value = file.name;
-            const sizeInKB = (file.size / 1024).toFixed(1);
-            document.getElementById('imageSizeBadge').textContent = `${sizeInKB} KB`;
+            document.getElementById('selectedImageName').innerText = `Selected: ${file.name}`;
+            
+            const nameInput = document.getElementById('imageFileName');
+            if (!nameInput.value) {
+                nameInput.value = file.name;
+            }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedImageBase64 = e.target.result.split(',')[1];
-                document.getElementById('previewImgElement').src = e.target.result;
-                document.getElementById('imagePreviewCard').classList.remove('hidden');
+            reader.onload = function(evt) {
+                const base64String = evt.target.result.split(',')[1];
+                selectedBase64Image = base64String;
+
+                const imgPreview = document.getElementById('imagePreview');
+                imgPreview.src = evt.target.result;
+                document.getElementById('imagePreviewContainer').classList.remove('hidden');
             };
             reader.readAsDataURL(file);
         }
 
-        async function uploadImageToGitHub() {
-            const config = getConfig();
-            if (!config.user || !config.repo || !config.token) {
-                showToast('Configure GitHub Settings first!', 'error');
-                switchTab('settings');
+        async function uploadImage() {
+            if (!verifyConfig()) return;
+
+            const folder = document.getElementById('imageFolderSelect').value;
+            let fileName = document.getElementById('imageFileName').value.trim();
+
+            if (!folder) {
+                showToast("⚠️ Select a folder!");
+                return;
+            }
+            if (!fileName) {
+                showToast("⚠️ Enter image file name!");
+                return;
+            }
+            if (!selectedBase64Image) {
+                showToast("⚠️ Choose an image file!");
                 return;
             }
 
-            if (!selectedImageBase64) {
-                showToast('Please select an image file first!', 'error');
-                return;
-            }
+            fileName = fileName.replace(/^\/+/, '');
+            const fullPath = `${folder}/${fileName}`;
 
-            const folderName = document.getElementById('imageFolderSelect').value.trim();
-            const fileName = document.getElementById('imageFileName').value.trim();
-
-            if (!folderName || !fileName) {
-                showToast('Select folder and enter file name!', 'error');
-                return;
-            }
-
-            const fullFilePath = `${folderName}/${fileName}`;
-            const uploadBtn = document.getElementById('uploadImageBtn');
-            const origContent = uploadBtn.innerHTML;
-            uploadBtn.disabled = true;
-            uploadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-sm"></i> <span>Uploading...</span>`;
+            showToast("📤 Uploading Image...");
 
             try {
-                let existingSha = null;
-                const checkUrl = `https://api.github.com/repos/${config.user}/${config.repo}/contents/${fullFilePath}`;
-                const checkRes = await fetch(checkUrl, {
+                // Auto-delete .gitkeep if present in folder
+                await autoRemoveGitKeep(folder);
+
+                const liveUrl = await uploadFileToGitHub(fullPath, selectedBase64Image, `Upload image: ${fullPath}`);
+                
+                // Final URL Structure: https://username.github.io/repo/picture/myphoto.jpg
+                document.getElementById('imageLiveUrl').value = liveUrl;
+                document.getElementById('imageViewBtn').href = liveUrl;
+                document.getElementById('imageResultCard').classList.remove('hidden');
+                showToast("✅ Image Uploaded!");
+            } catch (err) {
+                console.error(err);
+                showToast("❌ Image Upload Failed: " + err.message);
+            }
+        }
+
+        async function uploadFileToGitHub(path, base64Content, commitMsg) {
+            const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
+            
+            let sha = null;
+            try {
+                const getRes = await fetch(url, {
+                    headers: { 'Authorization': `token ${config.token}` }
+                });
+                if (getRes.ok) {
+                    const getData = await getRes.json();
+                    sha = getData.sha;
+                }
+            } catch (e) {}
+
+            const bodyData = {
+                message: commitMsg,
+                content: base64Content
+            };
+            if (sha) bodyData.sha = sha;
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${config.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bodyData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                return `https://${config.username}.github.io/${config.repo}/${path}`;
+            } else {
+                throw new Error(data.message || 'GitHub API Error');
+            }
+        }
+
+        // Auto remove .gitkeep file from GitHub folder if real files are added
+        async function autoRemoveGitKeep(folderName) {
+            if (!config.token || !config.username || !config.repo) return;
+            const gitKeepPath = `${folderName}/.gitkeep`;
+            const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${gitKeepPath}`;
+
+            try {
+                const checkRes = await fetch(url, {
+                    headers: { 'Authorization': `token ${config.token}` }
+                });
+                if (checkRes.ok) {
+                    const keepData = await checkRes.json();
+                    if (keepData.sha) {
+                        await fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `token ${config.token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: `Auto cleanup .gitkeep from ${folderName}`,
+                                sha: keepData.sha
+                            })
+                        });
+                    }
+                }
+            } catch (e) {
+                // Ignore if .gitkeep does not exist
+            }
+        }
+
+        async function fetchRepositoryTree() {
+            const container = document.getElementById('explorerFoldersContainer');
+            if (!verifyConfig(false)) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-amber-400">Please configure GitHub settings first.</div>`;
+                return;
+            }
+
+            container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 text-xs"><i class="fa-solid fa-spinner animate-spin text-lg mb-2 block"></i> Scanning GitHub Repository...</div>`;
+
+            try {
+                const url = `https://api.github.com/repos/${config.username}/${config.repo}/git/trees/main?recursive=1`;
+                let response = await fetch(url, {
                     headers: { 'Authorization': `token ${config.token}` }
                 });
 
-                if (checkRes.ok) {
-                    const fileData = await checkRes.json();
-                    existingSha = fileData.sha;
+                if (!response.ok) {
+                    const fallbackUrl = `https://api.github.com/repos/${config.username}/${config.repo}/git/trees/master?recursive=1`;
+                    response = await fetch(fallbackUrl, {
+                        headers: { 'Authorization': `token ${config.token}` }
+                    });
                 }
 
-                const bodyPayload = {
-                    message: `Host Image: ${fullFilePath}`,
-                    content: selectedImageBase64
-                };
-                if (existingSha) bodyPayload.sha = existingSha;
+                if (!response.ok) throw new Error("Could not fetch repository tree");
 
-                const putRes = await fetch(checkUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${config.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(bodyPayload)
+                const treeData = await response.json();
+                
+                // Sort items from NEWEST to OLDEST (reversing tree response)
+                const items = (treeData.tree || []).reverse();
+
+                globalFolderMap = {};
+
+                items.forEach(item => {
+                    if (item.type === 'blob') {
+                        const pathParts = item.path.split('/');
+                        let folderName = 'root';
+                        let fileName = item.path;
+
+                        if (pathParts.length > 1) {
+                            folderName = pathParts.slice(0, -1).join('/');
+                            fileName = pathParts[pathParts.length - 1];
+                        }
+
+                        if (fileName === '.gitkeep') return; // Ignore system keep file in view
+
+                        if (!globalFolderMap[folderName]) {
+                            globalFolderMap[folderName] = [];
+                        }
+                        globalFolderMap[folderName].push({
+                            fileName: fileName,
+                            fullPath: item.path,
+                            sha: item.sha
+                        });
+
+                        if (folderName !== 'root' && !foldersList.includes(folderName)) {
+                            foldersList.push(folderName);
+                        }
+                    }
                 });
 
-                if (putRes.ok) {
-                    // Result Format: halalcodes.github.io/pockethost/pictureone/image.jpg
-                    const directUrl = `https://${config.user}.github.io/${config.repo}/${fullFilePath}`;
-                    const htmlTag = `<img src="${directUrl}" alt="Hosted Image">`;
-
-                    document.getElementById('resultDirectUrl').value = directUrl;
-                    document.getElementById('resultHtmlTag').value = htmlTag;
-                    document.getElementById('imageResultCard').classList.remove('hidden');
-
-                    showToast('Image hosted successfully!', 'success');
-                    copyToClipboard(directUrl, 'Direct Image Link copied!');
-                } else {
-                    const errData = await putRes.json();
-                    throw new Error(errData.message || 'Image upload failed');
-                }
+                saveFolders();
+                renderExplorerFolderGrid();
 
             } catch (err) {
-                showToast(`Error: ${err.message}`, 'error');
-            } finally {
-                uploadBtn.disabled = false;
-                uploadBtn.innerHTML = origContent;
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-red-400">Error loading explorer: ${err.message}</div>`;
             }
         }
 
-        async function fetchDeployedProjects() {
-            const config = getConfig();
-            const container = document.getElementById('projectsListContainer');
-            if (!config.user || !config.repo || !config.token) {
-                container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">GitHub Settings Config Missing.</div>`;
-                return;
-            }
+        // Render Folder List Grid in Explorer
+        function renderExplorerFolderGrid() {
+            const container = document.getElementById('explorerFoldersContainer');
+            const folderKeys = Object.keys(globalFolderMap);
 
-            container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin text-lg mb-2 block"></i> Loading repository files...</div>`;
-
-            try {
-                const res = await fetch(`https://api.github.com/repos/${config.user}/${config.repo}/git/trees/main?recursive=1`, {
-                    headers: { 'Authorization': `token ${config.token}` }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.tree) {
-                        window.allDeployedItems = data.tree.filter(item => !item.path.startsWith('.'));
-                        renderProjectList(window.allDeployedItems);
-                    }
-                } else {
-                    container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">Failed to fetch repo items.</div>`;
-                }
-            } catch(e) {
-                container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">Error: ${e.message}</div>`;
-            }
-        }
-
-        function renderProjectList(items) {
-            const container = document.getElementById('projectsListContainer');
-            const config = getConfig();
-
-            if (!items || items.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">No files or folders found.</div>`;
+            if (folderKeys.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-slate-500">No folders or files found in repository</div>`;
                 return;
             }
 
             let html = '';
-            items.forEach(item => {
-                const liveUrl = `https://${config.user}.github.io/${config.repo}/${item.path}`;
-                const isDir = item.type === 'tree';
+
+            folderKeys.forEach(folder => {
+                const files = globalFolderMap[folder];
 
                 html += `
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            <i class="fa-solid ${isDir ? 'fa-folder text-amber-400' : 'fa-file-code text-indigo-400'} text-sm shrink-0"></i>
-                            <span class="font-mono text-xs text-slate-200 truncate font-semibold">${item.path}</span>
+                    <div onclick="openExplorerFolderPage('${folder}')" class="p-4 bg-slate-900/80 hover:bg-slate-900 border border-slate-800 rounded-2xl cursor-pointer transition flex items-center justify-between group">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-folder text-base"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h4 class="text-xs font-bold text-slate-200 truncate group-hover:text-cyan-300 transition">${folder}</h4>
+                                <p class="text-[10px] text-slate-500">${files.length} items</p>
+                            </div>
                         </div>
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${isDir ? 'bg-amber-500/10 text-amber-400' : 'bg-indigo-500/10 text-indigo-400'} uppercase">
-                            ${item.type}
-                        </span>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-600 group-hover:text-slate-300 group-hover:translate-x-0.5 transition"></i>
                     </div>
-
-                    <div class="flex items-center justify-between pt-1 border-t border-slate-800">
-                        <a href="${liveUrl}" target="_blank" class="text-[11px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 truncate">
-                            <i class="fa-solid fa-up-right-from-square text-[10px]"></i> Open Link
-                        </a>
-
-                        <button onclick="copyToClipboard('${liveUrl}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] transition flex items-center gap-1">
-                            <i class="fa-solid fa-copy"></i> Copy Link
-                        </button>
-                    </div>
-                </div>`;
+                `;
             });
 
             container.innerHTML = html;
         }
 
-        function filterProjects() {
-            const query = document.getElementById('searchProjectInput').value.toLowerCase();
-            if (!window.allDeployedItems) return;
-            const filtered = window.allDeployedItems.filter(item => item.path.toLowerCase().includes(query));
-            renderProjectList(filtered);
+        // Open Sub-Page for Single Folder Files
+        function openExplorerFolderPage(folderName) {
+            activeExplorerFolder = folderName;
+
+            document.getElementById('explorerPageFolders').classList.add('hidden');
+            document.getElementById('explorerPageSingleFolder').classList.remove('hidden');
+
+            document.getElementById('currentFolderNameHeading').innerHTML = `<i class="fa-solid fa-folder"></i> <span>${folderName}</span>`;
+
+            const files = globalFolderMap[folderName] || [];
+            document.getElementById('currentFolderFileCount').innerText = `${files.length} items`;
+
+            renderSingleFolderFilesList(files);
         }
 
-        function handleCodeFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('fileNameInput').value = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                editor.setValue(e.target.result, -1);
-                showToast(`Loaded ${file.name} into editor`, 'success');
-            };
-            reader.readAsText(file);
+        function backToExplorerFolders() {
+            document.getElementById('explorerPageSingleFolder').classList.add('hidden');
+            document.getElementById('explorerPageFolders').classList.remove('hidden');
+            activeExplorerFolder = null;
         }
 
-        function loadTemplateCode() {
-            const template = `<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-</head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
-    <div class="text-center space-y-4">
-        <h1 class="text-3xl font-bold text-indigo-400">Welcome to My Portfolio!</h1>
-        <p class="text-slate-400 text-sm">Hosted via PocketHost Studio on GitHub Pages.</p>
-        <button class="px-5 py-2.5 rounded-xl bg-indigo-600 font-semibold text-xs shadow-lg">Explore More</button>
-    </div>
-</body>
-</html>`;
-            if (editor) editor.setValue(template, -1);
-        }
+        // Render Files inside Selected Folder View
+        function renderSingleFolderFilesList(files) {
+            const container = document.getElementById('singleFolderFilesContainer');
 
-        function clearEditor() {
-            if (editor) editor.setValue('', -1);
-        }
-
-        function saveSettings() {
-            const user = document.getElementById('githubUser').value.trim() || 'halalcodes';
-            const repo = document.getElementById('githubRepo').value.trim() || 'pockethost';
-            const token = document.getElementById('githubToken').value.trim();
-
-            if (!token) {
-                showToast('Please enter your GitHub Personal Access Token!', 'error');
+            if (!files || files.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">No files found inside this folder</div>`;
                 return;
             }
 
-            const config = { user, repo, token };
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(config));
-            showToast('Settings saved successfully!', 'success');
-            updateHeaderStatus();
-            fetchRepoFolders();
+            container.innerHTML = files.map(file => {
+                const liveUrl = `https://${config.username}.github.io/${config.repo}/${file.fullPath}`;
+                const isImage = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(file.fileName);
+
+                return `
+                    <div class="p-3 bg-slate-900/90 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
+                            <div class="p-2 rounded-xl ${isImage ? 'bg-teal-500/10 text-teal-400' : 'bg-emerald-500/10 text-emerald-400'} shrink-0">
+                                <i class="fa-solid ${isImage ? 'fa-file-image' : 'fa-file-code'} text-sm"></i>
+                            </div>
+                            <span class="text-xs text-slate-200 font-mono truncate" title="${file.fileName}">${file.fileName}</span>
+                        </div>
+
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+                            <button onclick="copyDirectLink('${liveUrl}')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 text-xs font-medium rounded-xl transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Link</span>
+                            </button>
+                            <a href="${liveUrl}" target="_blank" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-medium rounded-xl transition flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span>View</span>
+                            </a>
+                            <button onclick="requestDeleteFile('${file.fullPath}', '${file.sha}')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium rounded-xl transition flex items-center gap-1" title="Delete File">
+                                <i class="fa-solid fa-trash"></i>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function loadSettings() {
-            const config = getConfig();
-            document.getElementById('githubUser').value = config.user;
-            document.getElementById('githubRepo').value = config.repo;
-            document.getElementById('githubToken').value = config.token;
-            updateHeaderStatus();
+        function requestDeleteFile(fullPath, sha) {
+            trigger5SecondDeletion(fullPath, async () => {
+                showToast("🗑️ Deleting file from GitHub...");
+                try {
+                    const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${fullPath}`;
+                    const res = await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `token ${config.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Delete file: ${fullPath}`,
+                            sha: sha
+                        })
+                    });
+
+                    if (res.ok) {
+                        showToast("✅ File Deleted!");
+                        fetchRepositoryTree();
+                    } else {
+                        const errData = await res.json();
+                        throw new Error(errData.message || 'Failed to delete file');
+                    }
+                } catch (e) {
+                    showToast("❌ Error: " + e.message);
+                }
+            });
         }
 
-        function updateHeaderStatus() {
-            const config = getConfig();
-            const badge = document.getElementById('headerBadge');
-            const badgeText = document.getElementById('badgeText');
+        function requestDeleteFolder(folderName) {
+            trigger5SecondDeletion(`Folder: ${folderName}`, async () => {
+                removeFolder(folderName);
+                showToast(`Deleted folder "${folderName}"`);
+            });
+        }
 
-            if (config.user && config.repo && config.token) {
-                badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-                badgeText.textContent = 'API Ready';
-            } else {
-                badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20';
-                badgeText.textContent = 'Config Required';
+        // Generic 5-second countdown timer controller
+        function trigger5SecondDeletion(itemName, executeDeleteFn) {
+            // Cancel any pending delete
+            cancelScheduledDeletion();
+
+            currentCountdownSeconds = 5;
+            document.getElementById('deleteTimerSeconds').innerText = currentCountdownSeconds;
+            document.getElementById('deleteModalItemName').innerText = itemName;
+            document.getElementById('deleteCountdownModal').classList.remove('hidden');
+
+            activeDeleteInterval = setInterval(() => {
+                currentCountdownSeconds--;
+                document.getElementById('deleteTimerSeconds').innerText = currentCountdownSeconds;
+                if (currentCountdownSeconds <= 0) {
+                    clearInterval(activeDeleteInterval);
+                }
+            }, 1000);
+
+            activeDeleteTimeout = setTimeout(() => {
+                document.getElementById('deleteCountdownModal').classList.add('hidden');
+                executeDeleteFn();
+            }, 5000);
+        }
+
+        function cancelScheduledDeletion() {
+            if (activeDeleteTimeout) {
+                clearTimeout(activeDeleteTimeout);
+                activeDeleteTimeout = null;
             }
-        }
-
-        function toggleTokenVisibility() {
-            const input = document.getElementById('githubToken');
-            const icon = document.getElementById('tokenEyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'fa-solid fa-eye-slash text-xs';
-            } else {
-                input.type = 'password';
-                icon.className = 'fa-solid fa-eye text-xs';
+            if (activeDeleteInterval) {
+                clearInterval(activeDeleteInterval);
+                activeDeleteInterval = null;
             }
+            document.getElementById('deleteCountdownModal').classList.add('hidden');
+            showToast("ℹ️ Deletion canceled!");
         }
 
-        function copyFieldValue(fieldId) {
-            const val = document.getElementById(fieldId).value;
-            copyToClipboard(val);
+        function verifyConfig(showAlert = true) {
+            if (!config.username || !config.repo || !config.token) {
+                if (showAlert) {
+                    showToast("⚠️ Configure Settings First!");
+                    switchTab('settings');
+                }
+                return false;
+            }
+            return true;
         }
 
-        function copyToClipboard(text, msg = 'Copied to clipboard!') {
-            const tempInput = document.createElement("input");
-            tempInput.value = text;
+        function copyToClipboard(inputId) {
+            const input = document.getElementById(inputId);
+            input.select();
+            document.execCommand('copy');
+            showToast("📋 Link copied to clipboard!");
+        }
+
+        function copyDirectLink(url) {
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
             document.body.appendChild(tempInput);
             tempInput.select();
-            document.execCommand("copy");
+            document.execCommand('copy');
             document.body.removeChild(tempInput);
-            showToast(msg, 'success');
+            showToast("📋 Link copied to clipboard!");
         }
 
-        function showToast(message, type = 'info', duration = 3500) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-
-            let bgClass = 'bg-slate-900 border-slate-700 text-slate-200';
-            let icon = 'fa-circle-info text-indigo-400';
-
-            if (type === 'success') {
-                bgClass = 'bg-slate-900 border-emerald-500/50 text-emerald-300';
-                icon = 'fa-circle-check text-emerald-400';
-            } else if (type === 'error') {
-                bgClass = 'bg-slate-900 border-rose-500/50 text-rose-300';
-                icon = 'fa-circle-xmark text-rose-400';
-            }
-
-            toast.className = `flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border shadow-2xl text-xs font-medium transform transition-all duration-300 -translate-y-2 opacity-0 ${bgClass}`;
-            toast.innerHTML = `
-                <i class="fa-solid ${icon} text-sm shrink-0"></i>
-                <span class="break-all flex-1">${message}</span>
-            `;
-
-            container.appendChild(toast);
-
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            document.getElementById('toastText').innerText = msg;
+            toast.classList.remove('hidden');
             setTimeout(() => {
-                toast.classList.remove('-translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
+                toast.classList.add('hidden');
+            }, 3000);
         }
     </script>
 </body>
