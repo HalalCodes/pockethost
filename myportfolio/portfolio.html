@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhammed Omor | Student & Tech Enthusiast</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Muhammed Omor | Student Portfolio">
+    <meta name="description" content="Personal portfolio of Muhammed Omor (Halal Codes) - Student, Tech Enthusiast, and Learner.">
+    <meta name="keywords" content="Muhammed Omor, Halal Codes, Student Portfolio, Hikmah, Web Learner">
+    <meta name="author" content="Muhammed Omor">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Muhammed Omor | Student Portfolio">
+    <meta property="og:description" content="Personal portfolio of Muhammed Omor - Student and Tech Learner.">
+    <meta property="og:image" content="https://halalcodes.github.io/pockethost/picture/myphoto.png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        hikmah: '#10b981',
+                        darkbg: '#080c14',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Hind Siliguri', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #080c14;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .glow-bg-1 {
+            background: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+        
+        .glow-bg-2 {
+            background: radial-gradient(circle at 100% 50%, rgba(16, 185, 129, 0.08) 0%, rgba(0, 0, 0, 0) 50%);
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(17, 24, 39, 0.55);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.15);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #34d399 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), rgba(16, 185, 129, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080c14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- Ambient Backgrounds -->
+    <div class="fixed inset-0 pointer-events-none z-0 glow-bg-1"></div>
+    <div class="fixed inset-0 pointer-events-none z-0 glow-bg-2"></div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 bg-slate-900 border border-sky-500/50 text-white px-5 py-3.5 rounded-2xl shadow-2xl shadow-sky-500/20">
+        <i class="fa-solid fa-circle-check text-sky-400 text-lg"></i>
+        <span id="toast-message" class="text-xs font-medium">ইমেইল কপি করা হয়েছে!</span>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 w-full z-40 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-all duration-300">
+                    MO
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-slate-100 tracking-wide text-base leading-tight">Muhammed Omor</span>
+                    <span class="text-[11px] text-emerald-400 font-mono tracking-wider">Halal Codes • Student</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Items -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-sky-400 transition-colors">আমার সম্পর্কে</a>
+                <a href="#interests" class="hover:text-sky-400 transition-colors">শিক্ষা ও আগ্রহ</a>
+                <a href="#projects" class="hover:text-sky-400 transition-colors">প্রজেক্টসমূহ</a>
+                <a href="#contact" class="hover:text-sky-400 transition-colors">যোগাযোগ</a>
+            </nav>
+
+            <!-- Action Button -->
+            <div class="hidden md:flex items-center gap-3">
+                <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white border border-emerald-500/30 text-xs font-semibold transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Hikmah Profile</span>
+                </a>
+                <a href="mailto:muhammedomor.studio@gmail.com" class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold transition-all shadow-lg shadow-sky-500/20 flex items-center gap-2">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    <span>ইমেইল পাঠান</span>
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Toggle -->
+            <button id="menu-btn" class="md:hidden text-slate-300 text-xl focus:outline-none p-2">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-slate-950/95 backdrop-blur-2xl px-6 py-6 space-y-4">
+            <a href="#about" class="block text-slate-300 hover:text-sky-400 text-sm font-medium">আমার সম্পর্কে</a>
+            <a href="#interests" class="block text-slate-300 hover:text-sky-400 text-sm font-medium">শিক্ষা ও আগ্রহ</a>
+            <a href="#projects" class="block text-slate-300 hover:text-sky-400 text-sm font-medium">প্রজেক্টসমূহ</a>
+            <a href="#contact" class="block text-slate-300 hover:text-sky-400 text-sm font-medium">যোগাযোগ</a>
+            
+            <div class="pt-2 flex flex-col gap-2">
+                <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="w-full text-center py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold text-xs">
+                    <i class="fa-solid fa-book-open mr-1"></i> Hikmah Profile
+                </a>
+                <a href="mailto:muhammedomor.studio@gmail.com" class="w-full text-center py-2.5 rounded-xl bg-sky-500 text-white font-semibold text-xs">
+                    ইমেইল পাঠান
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- Hero Section -->
+        <section id="about" class="pt-36 lg:pt-44 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+                
+                <!-- Hero Left Column: Bio & Info -->
+                <div class="lg:col-span-7 space-y-6 text-left order-2 lg:order-1">
+                    
+                    <!-- Status Badge -->
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel text-xs font-medium text-slate-200 border border-emerald-500/30">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                        <span>Student & Passionate Tech Learner</span>
+                    </div>
+
+                    <!-- Main Heading -->
+                    <div class="space-y-2">
+                        <p class="text-sky-400 text-sm md:text-base font-mono font-medium">আসসালামু আলাইকুম, আমি</p>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-none">
+                            <span class="gradient-text">Muhammed Omor</span>
+                        </h1>
+                        <h2 class="text-xl sm:text-2xl font-semibold text-slate-300 mt-2">
+                            শিক্ষার্থী • প্রযুক্তি ও জ্ঞান চর্চাকারী
+                        </h2>
+                    </div>
+
+                    <!-- Short Personal Bio -->
+                    <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl">
+                        আমি একজন শিক্ষার্থী। নতুন প্রযুক্তি শেখা, ওয়েবের প্রাথমিক বিষয়গুলো নিয়ে এক্সপেরিমেন্ট করা এবং ইসলামিক ও প্রয়োজনীয় জ্ঞান অর্জন ও শেয়ার করতে আমি ভালোবাসি।
+                    </p>
+
+                    <!-- Key Highlights -->
+                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800/80">
+                        <div class="p-3 rounded-2xl bg-slate-900/40 border border-slate-800">
+                            <p class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">Student</p>
+                            <p class="text-[11px] text-slate-400 mt-1">শিক্ষা ও অধ্যয়ন</p>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/40 border border-slate-800">
+                            <p class="text-2xl sm:text-3xl font-black text-sky-400 font-mono">Hikmah</p>
+                            <p class="text-[11px] text-slate-400 mt-1">জ্ঞান শেয়ারিং</p>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-900/40 border border-slate-800">
+                            <p class="text-2xl sm:text-3xl font-black text-indigo-400 font-mono">Learner</p>
+                            <p class="text-[11px] text-slate-400 mt-1">ওয়েব ও কোডিং</p>
+                        </div>
+                    </div>
+
+                    <!-- Primary Contact CTAs & Links -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <!-- Hikmah Button -->
+                        <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Hikmah Profile</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+
+                        <!-- Email Button -->
+                        <a href="mailto:muhammedomor.studio@gmail.com" class="px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-sky-500/20 flex items-center gap-2">
+                            <i class="fa-regular fa-envelope"></i>
+                            <span>ইমেইল করুন</span>
+                        </a>
+
+                        <!-- Copy Email -->
+                        <button onclick="copyEmail('muhammedomor.studio@gmail.com')" class="px-4 py-3 rounded-xl glass-panel hover:border-sky-500/40 text-slate-300 text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 group">
+                            <i class="fa-regular fa-copy text-sky-400 group-hover:scale-110 transition-transform"></i>
+                            <span>কপি ইমেইল</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Hero Right Column: Profile Picture Card -->
+                <div class="lg:col-span-5 flex justify-center order-1 lg:order-2">
+                    <div class="relative w-full max-w-sm">
+                        
+                        <!-- Glowing Backlight -->
+                        <div class="absolute -inset-2 bg-gradient-to-r from-emerald-500 to-sky-500 rounded-3xl blur-2xl opacity-20 animate-pulse"></div>
+                        
+                        <!-- Profile Main Container -->
+                        <div class="relative glass-card p-5 rounded-3xl gradient-border space-y-4">
+                            
+                            <!-- Image Frame -->
+                            <div class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-square">
+                                <img src="https://halalcodes.github.io/pockethost/picture/myphoto.png" alt="Muhammed Omor" class="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105">
+                                
+                                <div class="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 flex items-center justify-between text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-graduate text-emerald-400"></i>
+                                        <span class="text-slate-200">Muhammed Omor</span>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Student</span>
+                                </div>
+                            </div>
+
+                            <!-- Information Box -->
+                            <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs">
+                                <div class="flex justify-between text-slate-400 font-mono text-[11px]">
+                                    <span>Brand / Identity:</span>
+                                    <span class="text-slate-200 font-semibold">Halal Codes</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400 font-mono text-[11px]">
+                                    <span>Hikmah User:</span>
+                                    <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="text-emerald-400 hover:underline font-semibold">@muhammedomor_official</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Interests & Learning Section -->
+        <section id="interests" class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/60">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">Interests & Learning</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">শিক্ষা ও আগ্রহের বিষয়সমূহ</h2>
+                <p class="text-slate-400 text-sm">একজন শিক্ষার্থী হিসেবে যেসব বিষয়ে আমি শেখার চেষ্টা করছি</p>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/20 text-xl">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">ওয়েব ডিজাইন ও কোডিং</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        HTML, CSS, Tailwind CSS এবং মৌলিক JavaScript ব্যবহার করে সুন্দর ওয়েবে পেইজ ডিজাইন শেখা ও অনুশীলন করা।
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 text-xl">
+                        <i class="fa-solid fa-book-quran"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">জ্ঞান ও দ্বীন চর্চা (Hikmah)</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        হিকমাহ প্ল্যাটফর্মে ভালো চিন্তা, শিক্ষণীয় তথ্য এবং ইসলামিক নলেজ চর্চা ও শেয়ার করা।
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20 text-xl">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">ডিজিটাল টুলস এক্সপেরিমেন্ট</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                        PocketHost, GitHub Pages এবং বিভিন্ন ওয়েব ভিত্তিক টুলস ব্যবহার করে নতুন ছোট প্রজেক্ট পরীক্ষা করে দেখা।
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Projects / Practice Works Section -->
+        <section id="projects" class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/60">
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs font-mono font-semibold text-sky-400 uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full border border-sky-500/20">Practice Works</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">অনুশীলনমূলক প্রজেক্ট</h2>
+                <p class="text-slate-400 text-sm">শেখার অংশ হিসেবে আমার তৈরি করা ছোট কিছু কাজ</p>
+            </div>
+
+            <!-- Project Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Project Card 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="PocketHost Studio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-[11px] text-sky-400 font-mono border border-sky-500/30">
+                                Hosting Tool
+                            </span>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <h3 class="text-lg font-bold text-white">PocketHost Studio</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                ব্রাউজার থেকে সহজ উপায়ে ফাইল ও পেজ হোস্টিং অনুশীলন করার একটি ছোট প্রজেক্ট।
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 border-t border-slate-800/60 mt-4 flex items-center justify-between text-xs">
+                        <a href="https://halalcodes.github.io/pockethost/" target="_blank" class="px-4 py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500 text-sky-400 hover:text-white font-semibold transition-all flex items-center gap-2 border border-sky-500/20">
+                            <span>সাইট দেখুন</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card game glass-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Cyber Neon Catcher" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-[11px] text-purple-400 font-mono border border-purple-500/30">
+                                HTML5 Game
+                            </span>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <h3 class="text-lg font-bold text-white">Cyber Neon Catcher</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                ক্যানভাস ও জাভাস্ক্রিপ্ট লজিক দিয়ে শেখার উদ্দেশ্যে তৈরি করা একটি ২ডি আরকেড গেম।
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 border-t border-slate-800/60 mt-4 flex items-center justify-between text-xs">
+                        <span class="text-slate-400">HTML5 Canvas • JS</span>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group">
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="GitHub Storage" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                            <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-[11px] text-emerald-400 font-mono border border-emerald-500/30">
+                                Media Storage
+                            </span>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <h3 class="text-lg font-bold text-white">Static Media Storage</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                নিজের ছবি ও স্ট্যাটিক ফাইলগুলো গিটহাব পেজেস এর মাধ্যমে সংরক্ষিত রাখার ব্যবস্থা।
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 border-t border-slate-800/60 mt-4 flex items-center justify-between text-xs">
+                        <a href="https://halalcodes.github.io/pockethost/picture/myphoto.png" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white font-semibold transition-all flex items-center gap-2 border border-emerald-500/20">
+                            <span>ছবি দেখুন</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Buttons & Inquiry Section -->
+        <section id="contact" class="py-20 px-6 max-w-5xl mx-auto border-t border-slate-800/60">
+            <div class="glass-card p-8 sm:p-12 rounded-3xl relative overflow-hidden gradient-border">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
+                    <span class="text-xs font-mono text-sky-400 font-semibold uppercase tracking-wider">Get In Touch</span>
+                    <h2 class="text-3xl font-extrabold text-white">যোগাযোগ করুন</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm">
+                        যেকোনো প্রশ্ন, আলোচনা বা বিষয় শেয়ার করার জন্য নিচে দেওয়া বাটনগুলোর মাধ্যমে যুক্ত হতে পারেন।
+                    </p>
+                </div>
+
+                <!-- Contact Action Buttons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-10">
+                    
+                    <!-- Email Card Button -->
+                    <a href="mailto:muhammedomor.studio@gmail.com" class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-sky-500/50 transition-all flex items-center gap-4 group">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-regular fa-envelope"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-[11px] text-slate-400 font-mono">Email Address</p>
+                            <p class="text-xs sm:text-sm font-semibold text-white group-hover:text-sky-400 transition-colors truncate">
+                                muhammedomor.studio@gmail.com
+                            </p>
+                        </div>
+                    </a>
+
+                    <!-- Hikmah Profile Button -->
+                    <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 transition-all flex items-center gap-4 group">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-[11px] text-slate-400 font-mono">Hikmah Profile</p>
+                            <p class="text-xs sm:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors truncate">
+                                @muhammedomor_official
+                            </p>
+                        </div>
+                    </a>
+
+                </div>
+
+                <!-- Message Form -->
+                <form action="https://formspree.io/f/muhammedomor.studio@gmail.com" method="POST" class="max-w-2xl mx-auto space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 mb-1.5 block">আপনার নাম</label>
+                            <input type="text" name="name" required placeholder="আপনার নাম লিখুন" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-800 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 mb-1.5 block">আপনার ইমেইল</label>
+                            <input type="email" name="email" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-800 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 mb-1.5 block">বার্তা</label>
+                        <textarea name="message" rows="4" required placeholder="আপনার বার্তাটি এখানে লিখুন..." class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-800 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-sky-500 transition-colors resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-paper-plane"></i>
+                        <span>মেসেজ পাঠান</span>
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-8 px-6 z-10 relative bg-slate-950/60">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                    MO
+                </div>
+                <p>© 2026 <strong class="text-slate-200">Muhammed Omor</strong> (Halal Codes). Student Portfolio.</p>
+            </div>
+
+            <div class="flex items-center gap-4 text-sm">
+                <a href="https://hikmah.net/@muhammedomor_official" target="_blank" class="text-slate-400 hover:text-emerald-400 transition-colors" title="Hikmah Profile"><i class="fa-solid fa-book-open"></i></a>
+                <a href="mailto:muhammedomor.studio@gmail.com" class="text-slate-400 hover:text-sky-400 transition-colors" title="Send Email"><i class="fa-regular fa-envelope"></i></a>
+                <a href="https://github.com/halalcodes" target="_blank" class="text-slate-400 hover:text-white transition-colors" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Copy Email Function
+        function copyEmail(emailText) {
+            navigator.clipboard.writeText(emailText).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        }
+
+        // Mobile Drawer Navigation Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
