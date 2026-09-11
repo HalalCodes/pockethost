@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Codes | Full-Stack Developer & Creator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
+                    HC
+                </div>
+                <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-emerald-400 bg-clip-text text-transparent">Halal Codes</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-emerald-400 transition">About</a>
+                <a href="#skills" class="hover:text-emerald-400 transition">Skills</a>
+                <a href="#projects" class="hover:text-emerald-400 transition">Projects</a>
+                <a href="#contact" class="hover:text-emerald-400 transition">Contact</a>
+            </div>
+
+            <!-- Hire Me Button -->
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="px-4 py-2 text-xs sm:text-sm font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Contact Me</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="pt-28 pb-16 md:pt-36 md:pb-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <!-- Background Ambient Glow -->
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="flex flex-col md:flex-row items-center justify-between gap-10 md:gap-16">
+            <!-- Left Profile Image with Neon Ring -->
+            <div class="relative group">
+                <div class="absolute -inset-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+                <div class="relative w-44 h-44 sm:w-56 sm:h-56 rounded-full overflow-hidden border-2 border-emerald-400/50 bg-slate-900 shadow-2xl">
+                    <img 
+                        src="https://halalcodes.github.io/pockethost/picture/myphoto.png" 
+                        alt="Halal Codes Profile Picture" 
+                        class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';"
+                    />
+                </div>
+                <!-- Status Badge -->
+                <div class="absolute bottom-2 right-2 bg-slate-900 border border-slate-700/80 px-3 py-1 rounded-full flex items-center gap-2 shadow-lg backdrop-blur-md">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-[11px] font-medium text-slate-300">Available for Work</span>
+                </div>
+            </div>
+
+            <!-- Right Hero Info -->
+            <div class="flex-1 text-center md:text-left space-y-5">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold tracking-wide uppercase">
+                    <i class="fa-solid fa-code text-xs"></i> Full-Stack Web Developer
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                    Hi, I'm <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Halal Codes</span>
+                </h1>
+
+                <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl">
+                    আমি আধুনিক ও দৃষ্টিনন্দন ওয়েব অ্যাপ্লিকেশন এবং ডিজিটাল এক্সপেরিয়েন্স তৈরি করতে ভালোবাসি। নতুন প্রযুক্তি শেখা ও সেগুলোকে বাস্তবে রূপ দেয়া আমার প্রধান লক্ষ্য।
+                </p>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-3 pt-2 max-w-md mx-auto md:mx-0">
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <h4 class="text-xl font-bold text-emerald-400">15+</h4>
+                        <p class="text-[11px] text-slate-400 font-medium">Projects Done</p>
+                    </div>
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <h4 class="text-xl font-bold text-teal-400">100%</h4>
+                        <p class="text-[11px] text-slate-400 font-medium">Dedication</p>
+                    </div>
+                    <div class="glass-card p-3 rounded-2xl text-center">
+                        <h4 class="text-xl font-bold text-cyan-400">24/7</h4>
+                        <p class="text-[11px] text-slate-400 font-medium">Support</p>
+                    </div>
+                </div>
+
+                <!-- CTA Actions -->
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                    <a href="#projects" class="px-6 py-3 text-sm font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-95 flex items-center gap-2">
+                        <span>View Portfolio</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="https://github.com/halalcodes" target="_blank" class="px-6 py-3 text-sm font-semibold text-slate-300 bg-slate-900 border border-slate-800 hover:bg-slate-800/80 rounded-xl transition active:scale-95 flex items-center gap-2">
+                        <i class="fa-brands fa-github text-base"></i>
+                        <span>GitHub Profile</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 bg-slate-900/40 border-y border-slate-800/60">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">My Tech Stack</h2>
+                <p class="text-xs sm:text-sm text-slate-400">আমি যেসব প্রযুক্তি এবং ফ্রেমওয়ার্ক ব্যবহার করে ওয়েবসাইট ও অ্যাপ্লিকেশন তৈরি করি</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                <!-- Skill 1 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-brands fa-html5 text-3xl text-orange-500 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">HTML5</span>
+                </div>
+                <!-- Skill 2 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-brands fa-css3-alt text-3xl text-blue-500 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">CSS3</span>
+                </div>
+                <!-- Skill 3 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-brands fa-js text-3xl text-yellow-400 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">JavaScript</span>
+                </div>
+                <!-- Skill 4 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-brands fa-github text-3xl text-purple-400 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">GitHub API</span>
+                </div>
+                <!-- Skill 5 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-solid fa-wind text-3xl text-cyan-400 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">Tailwind CSS</span>
+                </div>
+                <!-- Skill 6 -->
+                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-emerald-500/40 transition group hover:-translate-y-1">
+                    <i class="fa-solid fa-server text-3xl text-emerald-400 group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-semibold text-slate-300">REST APIs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects Section -->
+    <section id="projects" class="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-4">
+            <div>
+                <span class="text-emerald-400 text-xs font-semibold tracking-wider uppercase">My Recent Work</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Featured Projects</h2>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-md">
+                PocketHost অ্যাপ্লিকেশনের মাধ্যমে তৈরি ও হোস্ট করা কিছু বিশেষ প্রজেক্ট উদাহরণ
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Project Card 1 -->
+            <div class="glass-card rounded-3xl overflow-hidden hover:border-emerald-500/50 transition duration-300 group flex flex-col">
+                <div class="h-44 bg-slate-900 overflow-hidden relative border-b border-slate-800">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80" alt="PocketHost Studio" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-semibold border border-emerald-500/30">Hosted via API</span>
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-white group-hover:text-emerald-400 transition">PocketHost Studio</h3>
+                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                            GitHub API ও Personal Access Token ব্যবহার করে সরাসরি ব্রাউজার থেকে HTML ও ইমেজ হোস্টিং প্ল্যাটফর্ম।
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                        <span class="text-[11px] font-medium text-slate-400">Tailwind • JS • GitHub API</span>
+                        <a href="#" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                            <span>Visit Site</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 2 -->
+            <div class="glass-card rounded-3xl overflow-hidden hover:border-emerald-500/50 transition duration-300 group flex flex-col">
+                <div class="h-44 bg-slate-900 overflow-hidden relative border-b border-slate-800">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80" alt="Cyber Neon Catcher Game" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-semibold border border-cyan-500/30">2D Canvas Game</span>
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-white group-hover:text-emerald-400 transition">Cyber Neon Catcher</h3>
+                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                            একটি মোবাইল ও পিসি ফ্রেন্ডলি নাইস ২ডি আরকেড গেম, যা HTML5 Canvas ও Particle Physics দিয়ে তৈরি।
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                        <span class="text-[11px] font-medium text-slate-400">HTML5 Canvas • JS</span>
+                        <a href="#" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                            <span>Play Game</span>
+                            <i class="fa-solid fa-gamepad text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 3 -->
+            <div class="glass-card rounded-3xl overflow-hidden hover:border-emerald-500/50 transition duration-300 group flex flex-col">
+                <div class="h-44 bg-slate-900 overflow-hidden relative border-b border-slate-800">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="Static Image & Web Host" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-semibold border border-teal-500/30">CDN & Storage</span>
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-white group-hover:text-emerald-400 transition">GitHub CDN & Hosting</h3>
+                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
+                            সাব-ফোল্ডার কাঠামোর মাধ্যমে যেকোনো ফাইল ও ইমেজের জন্য দ্রুতগতির এবং নির্ভরযোগ্য ফ্রি সিডিএন।
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                        <span class="text-[11px] font-medium text-slate-400">GitHub Pages • CDN</span>
+                        <a href="https://halalcodes.github.io/pockethost/picture/myphoto.png" target="_blank" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                            <span>View Image</span>
+                            <i class="fa-solid fa-image text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-slate-900/40 border-t border-slate-800/60">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-card p-6 sm:p-10 rounded-3xl border border-slate-800 relative overflow-hidden">
+                <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Get In Touch</h2>
+                    <p class="text-xs sm:text-sm text-slate-400">আপনার কোনো প্রজেক্ট বা কাজের ব্যাপারে আলোচনা করতে চাইলে আমাকে মেসেজ পাঠাতে পারেন</p>
+                </div>
+
+                <form onsubmit="handleFormSubmit(event)" class="space-y-4 max-w-lg mx-auto">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Your Name</label>
+                        <input type="text" required placeholder="আপনার নাম লিখুন" class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Your Email</label>
+                        <input type="email" required placeholder="আপনার ইমেইল ঠিকানা" class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Message</label>
+                        <textarea rows="4" required placeholder="আপনার মেসেজ বা প্রজেক্ট বিস্তারিত লিখুন..." class="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white focus:outline-none focus:border-emerald-500 transition"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-95 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Send Message</span>
+                    </button>
+                </form>
+
+                <div id="formStatus" class="hidden mt-4 text-center text-xs font-semibold text-emerald-400">
+                    ✅ ধন্যবাদ! আপনার মেসেজটি সফলভাবে পাঠানো হয়েছে।
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800/80 bg-slate-950">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© 2026 Halal Codes. Hosted via PocketHost Studio.</p>
+            <div class="flex items-center gap-5 text-slate-400 text-base">
+                <a href="https://github.com/halalcodes" target="_blank" class="hover:text-emerald-400 transition"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-emerald-400 transition"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-emerald-400 transition"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const status = document.getElementById('formStatus');
+            status.classList.remove('hidden');
+            e.target.reset();
+            setTimeout(() => {
+                status.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
